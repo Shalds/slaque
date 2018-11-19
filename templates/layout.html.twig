@@ -20,10 +20,16 @@
                         <a class="nav-link" href="{{ path('home') }}">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_connexion') }}">Connexion</a>
+                        <a class="nav-link" href="{{ path('user_login') }}">Connexion</a>
                     </li>
+
+                    {% if app.user == null %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_inscription') }}">Inscription</a>
+                        <a class="nav-link" href="{{ path('user_register') }}">Inscription</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('user_logout') }}">Deconnexion</a>
                     </li>
                 </ul>
             </div>

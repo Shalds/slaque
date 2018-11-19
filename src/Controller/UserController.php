@@ -13,18 +13,28 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class UserController extends Controller
 {
     /**
-     * @Route("/connexion", name="user_connexion")
+     * @Route("/connexion", name="user_login")
      */
-    public function login()
+    public function login(AuthenticationUtils $authenticationUtils, Request $request)
     {
+        if($this->getUser()){
+            $this->addFlash('warning', "Vous êtes déjà connecté !");
+
+            return $this->redirectToRoute("home");
+        }
+
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('user/connexion.html.twig', [
-
+            'lastUsername' => $lastUsername,
+            'error' => $error
         ]);
     }
 
     /**
-     * @Route("/inscription", name="user_inscription")
+     * @Route("/inscription", name="user_register")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -54,5 +64,12 @@ class UserController extends Controller
         return $this->render('user/inscription.html.twig', [
             "form" => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/deconnexion", name="user_logout")
+     */
+    public function logout(){
+
     }
 }
