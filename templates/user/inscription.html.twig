@@ -4,4 +4,10 @@
 
 {% block body %}
     <h2>Inscription</h2>
+    <div class="form_user">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+            <button class="btn btn-success">Inscription</button>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}
