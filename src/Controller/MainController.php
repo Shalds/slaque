@@ -12,7 +12,7 @@ class MainController extends Controller
      */
     public function index()
     {
-        $test = 0;
+  
         return $this->render('main/home.html.twig', [
 
         ]);
