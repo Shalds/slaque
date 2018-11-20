@@ -22,7 +22,7 @@ class Message
     private $text;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateCreated;
 
@@ -31,6 +31,11 @@ class Message
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Groupe", inversedBy="messages")
+     */
+    private $groupe;
 
     public function getId(): ?int
     {
@@ -69,6 +74,18 @@ class Message
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getGroupe(): ?Groupe
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?Groupe $groupe): self
+    {
+        $this->groupe = $groupe;
 
         return $this;
     }

@@ -18,6 +18,8 @@ security:
             form_login:
                 login_path: user_login
                 check_path: user_login
+                default_target_path: message
+
                 #pour protéger le formulaire de login contre les att. CSRF
                 csrf_token_generator: security.csrf.token_manager
             logout:

@@ -55,9 +55,15 @@ class User implements UserInterface
      */
     private $roles = [];
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Groupe", mappedBy="user")
+     */
+    private $groupes;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
+        $this->groupes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -192,5 +198,33 @@ class User implements UserInterface
     public function eraseCredentials()
     {
 
+    }
+
+    /**
+     * @return Collection|Groupe[]
+     */
+    public function getGroupes(): Collection
+    {
+        return $this->groupes;
+    }
+
+    public function addGroupe(Groupe $groupe): self
+    {
+        if (!$this->groupes->contains($groupe)) {
+            $this->groupes[] = $groupe;
+            $groupe->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupe(Groupe $groupe): self
+    {
+        if ($this->groupes->contains($groupe)) {
+            $this->groupes->removeElement($groupe);
+            $groupe->removeUser($this);
+        }
+
+        return $this;
     }
 }

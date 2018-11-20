@@ -20,7 +20,7 @@ class UserController extends Controller
         if($this->getUser()){
             $this->addFlash('warning', "Vous êtes déjà connecté !");
 
-            return $this->redirectToRoute("home");
+            return $this->redirectToRoute("message");
         }
 
         $error = $authenticationUtils->getLastAuthenticationError();
