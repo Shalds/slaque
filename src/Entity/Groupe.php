@@ -139,6 +139,6 @@ class Groupe implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return ["name" => $this->getName()];
+        return ["name" => $this->getName(), "id" => $this->getId(), "messages" => $this->getMessages(), "user" => $this->getUser()];
     }
 }

@@ -76,8 +76,8 @@ $(window).on('keydown', function(e) {
     }
 });
 
-function addGroupe(){
-
+function addGroupe(e){
+    e.preventDefault();
     var nameGroupe = $('#groupe input').val();
 
     if(nameGroupe == ""){
@@ -103,9 +103,20 @@ function addGroupe(){
     });
 };
 
-$('#submit_groupe').click(function(){
-    addGroupe();
-})
+$("form[name='groupe_add']").on("submit", addGroupe);
+
+
+$('#view_groupe_ajax_url').on('click', '.lien_groupe', function(e){
+    e.preventDefault();
+    var link = $(this).attr('href');
+
+    selectGroupe(link);
+});
+
+// $('#submit_add_groupe').click(function(){
+//     console.log('ee');
+//     addUserGroupe();
+// })
 
 function viewGroupe(){
     $.ajax({
@@ -114,10 +125,38 @@ function viewGroupe(){
         method: "get",
     })
     .done(function (groupes) {
-        console.log("deee");
         groupes.forEach(function (groupe) {
-
-            $("#dropdown_groupe").append('<p class="dropdown-item">' + groupe.name + '</p>');
+            $("#dropdown_groupe").append('<p class="dropdown-item"><a class="lien_groupe" href="'+ pathGroupe.replace("0", groupe.id)+'">' + groupe.name + '</a></p>');
         })
     });
 }
+
+function selectGroupe(link){
+
+    var regex = /(\d*)$/;
+    var match = regex.exec(link);
+    var id = match[1];
+
+    $.ajax({
+        url: 'message/select-groupe_' + id,
+        dataType: "json",
+        method: "get",
+    })
+    .done(function (groupes) {
+
+            $("#groupe_profil").html('<span>' + groupes.name + '</span>');
+    });
+}
+
+// function addUserGroupe(){
+//
+//     $.ajax({
+//         url: 'message/add-user-groupe',
+//         dataType: "json",
+//         method: "post",
+//         data: {
+//             "iduser": message
+//         },
+//     })
+//         .done();
+// }
