@@ -19,6 +19,21 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+    public function findGroupebyIdUser($id){
+
+        $qb = $this->createQueryBuilder('ug');
+        $qb->select('ug')
+            ->addSelect('w')
+            ->join('uw.wish', 'w')
+            ->andWhere('uw.user = :user')
+            ->setParameter('user', $user)
+            ->addOrderBy('uw.done', 'ASC')
+            ->addOrderBy('uw.dateAdded', 'DESC')
+        ;
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

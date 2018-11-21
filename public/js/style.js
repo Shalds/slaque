@@ -38,6 +38,7 @@ $("#status-options ul li").click(function() {
 
 username = $('#username span').html();
 
+
 function newMessage() {
     message = $("#message_text").val();
     if($.trim(message) == '') {
@@ -76,34 +77,33 @@ $(window).on('keydown', function(e) {
     }
 });
 
-function addGroupe(e){
-    e.preventDefault();
-    var nameGroupe = $('#groupe input').val();
+//Ajout d'un groupe à User
+$("form[name='groupe_add']").on("submit", addGroupe);
 
-    if(nameGroupe == ""){
+function addGroupe(e) {
+
+    e.preventDefault();
+
+    var nameGroupe = $('#groupe_add_name').val();
+
+    if (nameGroupe == "") {
         return false;
     }
-
-    var url = $('#groupe_ajax_url').data();
 
     $.ajax({
         url: 'message/addgroupe',
         dataType: "json",
+        type: "POST",
         data: {
             "name": nameGroupe
         },
-        method: "post",
-    })
-    .done(function (groupes) {
-        console.log("deee");
-        groupes.forEach(function (groupe) {
 
-            $("#dropdown_groupe").append('<p class="dropdown-item"'> + groupe.name + '</p>');
-        })
+        success: function (data) {
+
+        }
     });
-};
+}
 
-$("form[name='groupe_add']").on("submit", addGroupe);
 
 
 $('#view_groupe_ajax_url').on('click', '.lien_groupe', function(e){
@@ -118,16 +118,17 @@ $('#view_groupe_ajax_url').on('click', '.lien_groupe', function(e){
 //     addUserGroupe();
 // })
 
-function viewGroupe(){
+function viewGroupe() {
     $.ajax({
         url: 'message/viewgroupe',
         dataType: "json",
-        method: "get",
-    })
-    .done(function (groupes) {
-        groupes.forEach(function (groupe) {
-            $("#dropdown_groupe").append('<p class="dropdown-item"><a class="lien_groupe" href="'+ pathGroupe.replace("0", groupe.id)+'">' + groupe.name + '</a></p>');
-        })
+        type: "GET"
+        ,
+        success: function (groupes) {
+            groupes.forEach(function (groupe) {
+                $("#dropdown_groupe").append('<p class="dropdown-item"><a class="lien_groupe" href="' + pathGroupe.replace("0", groupe.id) + '">' + groupe.name + '</a></p>');
+            })
+        }
     });
 }
 

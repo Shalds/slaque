@@ -27,6 +27,7 @@ class MessageController extends Controller
 
         $formAddUserGroupe = $this->createForm(GroupeAddUserType::class, $groupe);
 
+
         return $this->render('message/message.html.twig', [
             'formMessage' => $formMessage->createView(),
             'formGroupe' => $formAddGroupe->createView(),

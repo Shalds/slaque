@@ -25,8 +25,11 @@ class GroupeController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $nameGroupe = $request->get('name');
-        $groupe->setName($nameGroupe);
 
+        $user = $this->getUser();
+
+        $groupe->setName($nameGroupe);
+        $groupe->addUser($user);
         $groupe->setDateCreated(new \DateTime());
 
         $em->persist($groupe);
@@ -48,14 +51,12 @@ class GroupeController extends Controller
     public function viewGroupe()
     {
 
+        $user = $this->getUser();
+
         $groupeRep = $this->getDoctrine()->getRepository(Groupe::class);
 
-        $groupes = $groupeRep->findBy(
-            [],
-            ['dateCreated' => 'DESC']
-        );
 
-        return new JsonResponse($groupes);
+        return new JsonResponse($user);
     }
 
     /**
@@ -64,13 +65,13 @@ class GroupeController extends Controller
     public function selectGroupe($id)
     {
 
-            $groupeRep = $this->getDoctrine()->getRepository(Groupe::class);
+        $groupeRep = $this->getDoctrine()->getRepository(Groupe::class);
 
-            $groupes = $groupeRep->find($id);
+        $groupes = $groupeRep->find($id);
 
-            $this->setIdGroupe($id);
+        $this->setIdGroupe($id);
 
-            return new JsonResponse($groupes);
+        return new JsonResponse($groupes);
     }
 
     /**
