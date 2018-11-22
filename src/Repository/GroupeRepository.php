@@ -19,6 +19,10 @@ class GroupeRepository extends ServiceEntityRepository
         parent::__construct($registry, Groupe::class);
     }
 
+    public function getAllMessageAfterLastId(){
+
+    }
+
     // /**
     //  * @return Groupe[] Returns an array of Groupe objects
     //  */

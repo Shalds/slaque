@@ -115,6 +115,24 @@ class GroupeController extends Controller
     }
 
     /**
+     * @Route("/message/update_message_groupe", name="update_message_groupe")
+     */
+    public function viewUpdateMessageGroupe(Request $request)
+    {
+
+        $groupeRep = $this->getDoctrine()->getRepository(Groupe::class);
+
+        $idGroupe = $request->get('idGroupe');
+        $idlastIdMessage = $request->get('lastIdMessage');
+
+        $groupe = $groupeRep->find($idGroupe);
+        $groupe->setIdlastIdMessage($idlastIdMessage);
+
+        return new JsonResponse($groupe);
+    }
+
+
+    /**
      * @return mixed
      */
     public function getIdGroupe()

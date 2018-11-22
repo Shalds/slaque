@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
+use ICanBoogie\DateTime;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GroupeRepository")
@@ -37,6 +39,8 @@ class Groupe implements \JsonSerializable
      * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="groupe")
      */
     private $messages;
+
+    private $idlastIdMessage;
 
     public function __construct()
     {
@@ -110,42 +114,40 @@ class Groupe implements \JsonSerializable
         return $this;
     }
 
-    public function getMessageUser()
-    {
-        $tabUserMessage = [];
-        $tabMessage = [];
-
-        foreach ($this->getUser() as $item){
-
-            foreach($item->getMessages() as $messages){
-                $tabMessage[] = $messages->getText();
-            }
-
-            $tabUserMessage[$item->getUsername()] = $tabMessage;
-
-        }
-
-        return $tabUserMessage;
-    }
-
 
     /**
      * @return Collection|Message[]
      */
     public function getMessages(): Collection
     {
-        return $this->messages;
+        if($this->getIdlastIdMessage() != null){
+
+            $IdlastIdMessage = $this->getIdlastIdMessage();
+
+            $criteria = Criteria::create()
+                ->andWhere(Criteria::expr()->gt('id', $IdlastIdMessage));
+
+            return $this->messages->matching($criteria);
+
+        }else{
+            return $this->messages;
+        }
+
     }
 
     public function getMessagesJS()
     {
         $messageObj = $this->getMessages();
         $tabMessage = [];
+
         foreach ($messageObj as $messages){
-            $tabMessage[] = ['message' => $messages->getText(), 'date' => $messages->getDateCreated(), 'author' => $messages->getUser()->getUsername()];
+
+            $tabMessage[] = ['id' => $messages->getId(), 'message' => $messages->getText(), 'date' => $messages->getDateCreated(), 'author' => $messages->getUser()->getUsername()];
         }
         return $tabMessage;
+
     }
+
 
     public function addMessage(Message $message): self
     {
@@ -169,6 +171,23 @@ class Groupe implements \JsonSerializable
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getIdlastIdMessage()
+    {
+        return $this->idlastIdMessage;
+    }
+
+    /**
+     * @param mixed $idlastIdMessage
+     */
+    public function setIdlastIdMessage($idlastIdMessage): void
+    {
+        $this->idlastIdMessage = $idlastIdMessage;
+    }
+
 
     /**
      * Specify data which should be serialized to JSON

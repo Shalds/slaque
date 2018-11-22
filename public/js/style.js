@@ -55,7 +55,7 @@ function newMessage() {
             success: function (data)
             {
                 console.log(data);
-                $('#list_message ul:last-child').append('<li class="sent"> <p id="author">' + data.author + ' dit : </p> <p id="message_text_list">' + data.message + '</p> <p id="date_message"> à ' + data.date.date +'</p> </li>')
+                $('#list_message ul:last-child').append('<li class="sent"> <p id="author">' + data.author + ' dit : </p> <p id="message_text_list" data-id="'+data.id+'">' + data.message + '</p> <p id="date_message"> à ' + data.date.date +'</p> </li>')
 
             }
         });
@@ -122,6 +122,29 @@ function viewGroupe() {
             user.groupes.forEach(function (groupe) {
 
                 $("#dropdown_groupe").append('<p class="dropdown-item"><a class="lien_groupe" href="' + pathGroupe.replace("0", groupe.id) + '">' + groupe.name + '</a></p>');
+            })
+        }
+    });
+}
+
+function updateGroupe() {
+    var objectIdMessage = $('#list_message li:last-child').find('#message_text_list').data();
+    var lastIdMessage = objectIdMessage.id;
+    var idGroupe = $("#groupe_profil").attr('data-id');
+
+    $.ajax({
+        url: 'message/update_message_groupe',
+        dataType: "json",
+        type: "POST",
+        data: {
+            "lastIdMessage": lastIdMessage,
+            "idGroupe": idGroupe
+        },
+
+        success: function (groupe) {
+
+            groupe.messages.forEach(function (message){
+                $('#list_message').children().append('<li class="sent"> <p id="author">' + message.author + ' dit : </p> <p id="message_text_list" data-id="'+message.id+'">' + message.message + '</p> <p id="date_message"> à ' + message.date.date +'</p> </li>')
             })
         }
     });
@@ -216,10 +239,20 @@ function viewMessage(){
         success: function (groupe) {
             console.log(groupe);
             groupe.messages.forEach(function (message){
-                $('#list_message').children().append('<li class="sent"> <p id="author">' + message.author + ' dit : </p> <p id="message_text_list">' + message.message + '</p> <p id="date_message"> à ' + message.date.date +'</p> </li>')
+                $('#list_message').children().append('<li class="sent"> <p id="author">' + message.author + ' dit : </p> <p id="message_text_list" data-id="'+message.id+'">' + message.message + '</p> <p id="date_message"> à ' + message.date.date +'</p> </li>')
             })
-
 
         }
     });
 }
+
+setInterval(function(){
+    var idGroupe = $("#groupe_profil").attr('data-id');
+
+    if(idGroupe == undefined){
+
+    }else{
+
+        updateGroupe();
+    }
+}, 5000);

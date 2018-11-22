@@ -99,6 +99,6 @@ class Message implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return ["message" => $this->getText(), "author" => $this->getUser()->getUsername(), "date" => $this->getDateCreated() ];
+        return ["id" => $this->getId(),"message" => $this->getText(), "author" => $this->getUser()->getUsername(), "date" => $this->getDateCreated() ];
     }
 }
