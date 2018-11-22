@@ -27,8 +27,7 @@
             <div class="wrap">
                 <p id="username"><span>{{ app.user.username }}</span></p>
                 {#<img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" class="online" alt="" />#}
-                <p>GROUPE : </p>
-                <p id="groupe_profil"></p>
+                <p>GROUPE : <span id="groupe_profil"></span></p>
                 <div  class="nav-item" id="groupe_add_user_ajax_url" data-url="{{ path('add_user_groupe') }}">
                         {{ form_start(formAddUserGroupe) }}
                         <p>Ajouter des utlisateurs au groupe</p>
@@ -36,22 +35,11 @@
                             <button id="submit_add_groupe" class="submit"><i class="fas fa-user-plus"></i></button>
                         {{ form_end(formAddUserGroupe) }}
                 </div>
-                <i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
-                <div id="status-options">
+                <div id="block_invite">
+                    <p>Invité :</p>
                     <ul>
-                        <li id="status-online" class="active"><span class="status-circle"></span> <p>Online</p></li>
-                        <li id="status-away"><span class="status-circle"></span> <p>Away</p></li>
-                        <li id="status-busy"><span class="status-circle"></span> <p>Busy</p></li>
-                        <li id="status-offline"><span class="status-circle"></span> <p>Offline</p></li>
+
                     </ul>
-                </div>
-                <div id="expanded">
-                    <label for="twitter"><i class="fa fa-facebook fa-fw" aria-hidden="true"></i></label>
-                    <input name="twitter" type="text" value="mikeross" />
-                    <label for="twitter"><i class="fa fa-twitter fa-fw" aria-hidden="true"></i></label>
-                    <input name="twitter" type="text" value="ross81" />
-                    <label for="twitter"><i class="fa fa-instagram fa-fw" aria-hidden="true"></i></label>
-                    <input name="twitter" type="text" value="mike.ross" />
                 </div>
             </div>
         </div>
@@ -78,7 +66,7 @@
                 <i class="fa fa-instagram" aria-hidden="true"></i>
             </div>
         </div>
-        <div class="messages">
+        <div class="messages" id="list_message">
             <ul>
 
             </ul>
@@ -86,7 +74,7 @@
         <div id="ajax-url" class="message-input" data-url="{{ path('add_message') }}">
             {{ form_start(formMessage) }}
             {{ form_widget(formMessage) }}
-            <button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+            <button id="submit_message"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
             <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
             {{ form_end(formMessage) }}
         </div>

@@ -53,8 +53,9 @@ class GroupeController extends Controller
 
         $user = $this->getUser();
 
-        $groupeRep = $this->getDoctrine()->getRepository(Groupe::class);
+        $groupe = $user->getGroupes();
 
+        $groupeRep = $this->getDoctrine()->getRepository(Groupe::class);
 
         return new JsonResponse($user);
     }
@@ -80,23 +81,37 @@ class GroupeController extends Controller
     public function addUserGroupe(Request $request)
     {
 
-        $userRep = $this->getDoctrine()->getRepository(User::class);
         $groupeRep = $this->getDoctrine()->getRepository(Groupe::class);
+        $userRep = $this->getDoctrine()->getRepository(User::class);
 
         $em = $this->getDoctrine()->getManager();
+        $tabIdUser = $request->get('idUser');
+        $idGroupe = $request->get('idGroupe');
 
-        //Get User by ID
-        $idUser = $request->get('id');
-        $user = $userRep->find($idUser);
+        $groupe = $groupeRep->find($idGroupe);
 
-        $groupeUser = $groupeRep->find($this->getIdGroupe());
-
-        $groupeUser->setUser($user);
-
-        $em->persist($groupeUser);
+        foreach ($tabIdUser as $item){
+            $groupe->addUser($userRep->find($item));
+            $em->persist($groupe);
+        }
         $em->flush();
 
-        return new JsonResponse($groupeUser);
+
+        return new JsonResponse($groupe);
+    }
+
+    /**
+     * @Route("/message/view-user-groupe", name="view_user_groupe")
+     */
+    public function viewUserGroupe(Request $request)
+    {
+
+        $groupeRep = $this->getDoctrine()->getRepository(Groupe::class);
+        $idGroupe = $request->get('idGroupe');
+
+        $groupe = $groupeRep->find($idGroupe);
+
+        return new JsonResponse($groupe);
     }
 
     /**

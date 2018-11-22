@@ -40,41 +40,36 @@ username = $('#username span').html();
 
 
 function newMessage() {
+
+    var idGroupe = $("#groupe_profil").attr('data-id');
     message = $("#message_text").val();
-    if($.trim(message) == '') {
-        return false;
-    }
-    url = $('#ajax-url').data();
 
         $.ajax({
             url: 'message/add',
             method: "POST",
             dataType: "json",
             data: {
-                "text": message
+                "text": message,
+                "idGroupe": idGroupe
             },
             success: function (data)
             {
-                $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><span>' + username + '</span><p>' + message + '</p></li>').appendTo($('.messages ul'));
-                $('.message-input input').val(null);
-                $('.contact.active .preview').html('<span>You: </span>' + message);
-                $(".messages").animate({ scrollTop: $(document).height() }, "fast");
-                $("#message_text").val("");
+                console.log(data);
+                $('#list_message ul:last-child').append('<li class="sent"> <p id="author">' + data.author + ' dit : </p> <p id="message_text_list">' + data.message + '</p> <p id="date_message"> à ' + data.date.date +'</p> </li>')
 
             }
         });
         return false;
 };
 
-$('.submit').click(function() {
-    newMessage();
-});
 
-$(window).on('keydown', function(e) {
-    if (e.which == 13) {
+$('#message_text').keyup(function(e) {
+    if(e.keyCode == 13) {
+
         newMessage();
-        return false;
+        $('#message textarea').val('');
     }
+
 });
 
 //Ajout d'un groupe à User
@@ -100,6 +95,8 @@ function addGroupe(e) {
 
         success: function (data) {
 
+            $("#dropdown_groupe").children().remove();
+            viewGroupe();
         }
     });
 }
@@ -111,12 +108,9 @@ $('#view_groupe_ajax_url').on('click', '.lien_groupe', function(e){
     var link = $(this).attr('href');
 
     selectGroupe(link);
+
 });
 
-// $('#submit_add_groupe').click(function(){
-//     console.log('ee');
-//     addUserGroupe();
-// })
 
 function viewGroupe() {
     $.ajax({
@@ -124,13 +118,15 @@ function viewGroupe() {
         dataType: "json",
         type: "GET"
         ,
-        success: function (groupes) {
-            groupes.forEach(function (groupe) {
+        success: function (user) {
+            user.groupes.forEach(function (groupe) {
+
                 $("#dropdown_groupe").append('<p class="dropdown-item"><a class="lien_groupe" href="' + pathGroupe.replace("0", groupe.id) + '">' + groupe.name + '</a></p>');
             })
         }
     });
 }
+
 
 function selectGroupe(link){
 
@@ -144,20 +140,86 @@ function selectGroupe(link){
         method: "get",
     })
     .done(function (groupes) {
+        $("#groupe_profil").html(groupes.name);
+        $("#groupe_profil").attr('data-id', groupes.id);
+        viewUserGroupe();
+        viewMessage();
+    });
 
-            $("#groupe_profil").html('<span>' + groupes.name + '</span>');
+}
+
+$('#submit_add_groupe').on('click', function(e){
+    e.preventDefault();
+
+    //Parcour chaque élément et éxécute la fonction pour chaque
+    var tabId = $.map($("input[name='groupe_add_user[user][]']:checked"), function(v,i) {
+        return +v.value;
+    });
+
+    addUserGroupe(tabId);
+    viewUserGroupe();
+});
+
+
+function addUserGroupe(tabId){
+
+    var idGroupe = $("#groupe_profil").attr('data-id');
+
+    $.ajax({
+        url: 'message/add-user-groupe',
+        dataType: "json",
+        type: "POST",
+        data: {
+            "idUser": tabId,
+            "idGroupe": idGroupe,
+        },
+
+        success: function () {
+            viewUserGroupe();
+        }
     });
 }
 
-// function addUserGroupe(){
-//
-//     $.ajax({
-//         url: 'message/add-user-groupe',
-//         dataType: "json",
-//         method: "post",
-//         data: {
-//             "iduser": message
-//         },
-//     })
-//         .done();
-// }
+function viewUserGroupe(){
+
+    var idGroupe = $("#groupe_profil").attr('data-id');
+
+    $.ajax({
+        url: 'message/view-user-groupe',
+        dataType: "json",
+        type: "POST",
+        data: {
+            "idGroupe": idGroupe,
+        },
+
+        success: function (groupe) {
+            $("#block_invite ul").children().remove();
+            groupe.userName.forEach(function (username) {
+                $("#block_invite").children('ul').append('<li><p>' + username + '</p></li>');
+            })
+        }
+    });
+}
+
+function viewMessage(){
+
+    var idGroupe = $("#groupe_profil").attr('data-id');
+
+    $.ajax({
+        url: 'message/viewMessage',
+        dataType: "json",
+        type: "POST",
+        data: {
+            "idGroupe": idGroupe,
+        },
+
+        success: function (groupe) {
+            console.log(groupe);
+            groupe.messages.forEach(function (message){
+                $('#list_message').children().append('<li class="sent"> <p id="author">' + message.author + ' dit : </p> <p id="message_text_list">' + message.message + '</p> <p id="date_message"> à ' + message.date.date +'</p> </li>')
+            })
+
+
+        }
+    });
+}

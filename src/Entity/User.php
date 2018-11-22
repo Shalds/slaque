@@ -144,6 +144,7 @@ class User implements UserInterface, \JsonSerializable
      */
     public function getMessages(): Collection
     {
+
         return $this->messages;
     }
 
@@ -243,7 +244,7 @@ class User implements UserInterface, \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return ["name" => $this->getUsername(), "id" => $this->getId(), "messages" => $this->getMessages(), "groupes" => $this->getGroupes()];
+        return ["name" => $this->getUsername(), "id" => $this->getId(), "messages" => $this->getMessages()->toArray(), "groupes" => $this->getGroupes()->toArray()];
 
     }
 }

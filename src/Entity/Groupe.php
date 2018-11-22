@@ -81,6 +81,17 @@ class Groupe implements \JsonSerializable
         return $this->user;
     }
 
+    public function getUserUsername()
+    {
+        $tabUsername =[];
+
+        foreach ($this->getUser() as $item){
+            $tabUsername[] = $item->getUsername();
+        }
+
+        return $tabUsername;
+    }
+
     public function addUser(User $user): self
     {
         if (!$this->user->contains($user)) {
@@ -99,12 +110,41 @@ class Groupe implements \JsonSerializable
         return $this;
     }
 
+    public function getMessageUser()
+    {
+        $tabUserMessage = [];
+        $tabMessage = [];
+
+        foreach ($this->getUser() as $item){
+
+            foreach($item->getMessages() as $messages){
+                $tabMessage[] = $messages->getText();
+            }
+
+            $tabUserMessage[$item->getUsername()] = $tabMessage;
+
+        }
+
+        return $tabUserMessage;
+    }
+
+
     /**
      * @return Collection|Message[]
      */
     public function getMessages(): Collection
     {
         return $this->messages;
+    }
+
+    public function getMessagesJS()
+    {
+        $messageObj = $this->getMessages();
+        $tabMessage = [];
+        foreach ($messageObj as $messages){
+            $tabMessage[] = ['message' => $messages->getText(), 'date' => $messages->getDateCreated(), 'author' => $messages->getUser()->getUsername()];
+        }
+        return $tabMessage;
     }
 
     public function addMessage(Message $message): self
@@ -139,6 +179,6 @@ class Groupe implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return ["name" => $this->getName(), "id" => $this->getId(), "messages" => $this->getMessages(), "user" => $this->getUser()];
+        return ["name" => $this->getName(), "id" => $this->getId(), "messages" => $this->getMessagesJS(), "userName" => $this->getUserUsername()];
     }
 }

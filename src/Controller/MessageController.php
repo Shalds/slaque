@@ -45,18 +45,40 @@ class MessageController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             $text = $request->get('text');
+            $idGroupe = $request->get('idGroupe');
+
+            $groupeRep = $this->getDoctrine()->getRepository(Groupe::class);
+            $groupe = $groupeRep->find($idGroupe);
+
             $message = new Message();
             $message->setText($text);
             $message->setDateCreated(new \DateTime());
             $message->setUser($user);
+            $message->setGroupe($groupe);
 
             $em->persist($message);
             $em->flush();
             //make something curious, get some unbelieveable data
             $arrData = ['output' => 'here the result which will appear in div'];
 
-        return new JsonResponse($arrData);
+        return new JsonResponse($message);
     }
+
+    /**
+     * @Route("/message/viewMessage", name="view_message")
+     */
+    public function getMessage(Request $request)
+    {
+
+        $idGroupe = $request->get('idGroupe');
+
+        $repoGroupe = $this->getDoctrine()->getRepository(Groupe::class);
+
+        $groupe = $repoGroupe->find($idGroupe);
+
+        return new JsonResponse($groupe);
+    }
+
 
 
 }
