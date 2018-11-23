@@ -25,21 +25,51 @@
         </div>
         <div id="profile">
             <div class="wrap">
-                <p id="username"><span>{{ app.user.username }}</span></p>
-                {#<img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" class="online" alt="" />#}
-                <p>GROUPE : <span id="groupe_profil"></span></p>
+                <div class="block_right_profil">
+                    <!-- Button trigger modal -->
+                    <button id="username" type="button" class="" data-toggle="modal" data-target="#exampleModalCenter" data-id="{{ app.user.id }}">
+                        <span>{{ app.user.username }}</span>
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content" id="modal_edit_profil">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Modifier votre profil</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    {{ form_start(formUserEditProfilType, {'attr': {'id': 'formUserEditProfill'}}) }}
+                                    {{ form_widget(formUserEditProfilType) }}
+                                    <button id="submit_UserEditProfil" class="submit btn btn-success" data-dismiss="modal">Envoi !</button>
+                                    {{ form_end(formUserEditProfilType) }}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {#<img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" class="online" alt="" />#}
+                    <p>GROUPE : <span id="groupe_profil"></span></p>
+                    <div id="block_invite">
+                        <p>Invité :</p>
+                        <ul>
+
+                        </ul>
+                    </div>
+                </div>
+
                 <div  class="nav-item" id="groupe_add_user_ajax_url" data-url="{{ path('add_user_groupe') }}">
                         {{ form_start(formAddUserGroupe) }}
                         <p>Ajouter des utlisateurs au groupe</p>
                         {{ form_widget(formAddUserGroupe) }}
                             <button id="submit_add_groupe" class="submit"><i class="fas fa-user-plus"></i></button>
                         {{ form_end(formAddUserGroupe) }}
-                </div>
-                <div id="block_invite">
-                    <p>Invité :</p>
-                    <ul>
-
-                    </ul>
                 </div>
             </div>
         </div>

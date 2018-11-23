@@ -25,12 +25,6 @@
     margin-left: 0px;
 }
 
-#group_add_user{
-    position: absolute;
-    left: 418px;
-    width: 39%;
-}
-
 #group_add_user .form-group{
     width: 52%;
 }
@@ -44,6 +38,24 @@
     position: inherit;
 }
 
+#profile .block_right_profil {
+    margin-right: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+#profile .block_right_profil > p {
+margin-bottom: 35px;
+}
+
+#block_invite li{
+  margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#modal_edit_profil{
+    color: black !important;
+}
 body {
     display: flex;
     align-items: center;
@@ -102,6 +114,12 @@ body {
     height: 210px;
     line-height: initial;
 }
+
+#profile .wrap {
+    display: flex;
+}
+
+
 #frame #sidepanel #profile.expanded .wrap p {
     margin-top: 20px;
 }
@@ -630,7 +648,7 @@ body {
 }
 #frame .content .message-input {
     position: absolute;
-    bottom: 90px;
+    bottom: 4px;
     width: 100%;
     z-index: 99;
 }

@@ -246,6 +246,38 @@ function viewMessage(){
     });
 }
 
+$('form[name="user_edit_profil"]').on('submit', function(e)
+    {
+        e.preventDefault();
+
+    });
+
+$('#submit_UserEditProfil').click(function(){
+    update_profil();
+})
+
+
+function update_profil(){
+
+    var idUser = $('#username').attr('data-id');
+    var form = $('#formUserEditProfill')[0]['Image'];
+    var pseudo = $('#user_edit_profil_username').val();
+
+    $.ajax({
+        url: "message/update_profil",
+        dataType: "json",
+        type: "POST",
+        contentType:false,
+        processData:false,
+        data: new FormData(form),
+
+        success: function (groupe) {
+
+
+        }
+    });
+}
+
 setInterval(function(){
     var idGroupe = $("#groupe_profil").attr('data-id');
 
@@ -256,3 +288,5 @@ setInterval(function(){
         updateGroupe();
     }
 }, 5000);
+
+

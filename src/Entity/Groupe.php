@@ -132,7 +132,6 @@ class Groupe implements \JsonSerializable
         }else{
             return $this->messages;
         }
-
     }
 
     public function getMessagesJS()

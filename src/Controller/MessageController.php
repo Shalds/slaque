@@ -4,13 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Groupe;
 use App\Entity\Message;
+use App\Entity\User;
 use App\Form\GroupeAddType;
 use App\Form\GroupeAddUserType;
 use App\Form\MessageType;
+use App\Form\UserEditProfilType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+
 
 class MessageController extends Controller
 {
@@ -27,11 +30,14 @@ class MessageController extends Controller
 
         $formAddUserGroupe = $this->createForm(GroupeAddUserType::class, $groupe);
 
+        $user = new User();
+        $formUserEditProfilType = $this->createForm(UserEditProfilType::class, $user);
 
         return $this->render('message/message.html.twig', [
             'formMessage' => $formMessage->createView(),
             'formGroupe' => $formAddGroupe->createView(),
-            'formAddUserGroupe' => $formAddUserGroupe->createView()
+            'formAddUserGroupe' => $formAddUserGroupe->createView(),
+            'formUserEditProfilType' => $formUserEditProfilType->createView()
         ]);
     }
 
@@ -58,8 +64,7 @@ class MessageController extends Controller
 
             $em->persist($message);
             $em->flush();
-            //make something curious, get some unbelieveable data
-            $arrData = ['output' => 'here the result which will appear in div'];
+
 
         return new JsonResponse($message);
     }

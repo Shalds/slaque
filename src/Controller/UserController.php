@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegisterUserType;
+use App\Uploader\Uploader;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -64,6 +66,35 @@ class UserController extends Controller
         return $this->render('user/inscription.html.twig', [
             "form" => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/message/update_profil", name="user_update_profil")
+     */
+    public function update_profil(Request $request, Uploader $uploader)
+    {
+
+        var_dump($request->files->get("user_edit_profil"));
+        die();
+        $file = $request->files->get('user_edit_profil["Image"]');
+
+        $user = $this->getUser();
+
+        $error = $uploader->setUploadFile($file);
+
+        if ($error){
+            dump($error);
+           die();
+        }
+
+        $uploader->uploadFile();
+        $user->setImage( $uploader->getNewFileNameWithExt() );
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return new JsonResponse($user);
     }
 
     /**
