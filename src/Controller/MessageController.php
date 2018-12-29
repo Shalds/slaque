@@ -33,6 +33,9 @@ class MessageController extends Controller
         $user = new User();
         $formUserEditProfilType = $this->createForm(UserEditProfilType::class, $user);
 
+
+
+
         return $this->render('message/message.html.twig', [
             'formMessage' => $formMessage->createView(),
             'formGroupe' => $formAddGroupe->createView(),

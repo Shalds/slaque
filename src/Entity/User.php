@@ -41,22 +41,6 @@ class User implements UserInterface, \JsonSerializable
      */
     private $image;
 
-    private $imageFile;
-    /**
-     * @return mixed
-     */
-    public function getImageFile(): ?UploadedFile
-    {
-        return $this->imageFile;
-    }
-    /**
-     * @param mixed $imageFile
-     */
-    public function setImageFile(UploadedFile $imageFile): void
-    {
-        $this->imageFile = $imageFile;
-    }
-
     /**
      * @ORM\Column(type="datetime")
      */
